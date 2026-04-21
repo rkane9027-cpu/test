@@ -1,612 +1,1095 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Streetwear 3D | Nike TN · Adidas · Street Style</title>
-    <!-- Google Fonts pour une touche streetwear / moderne -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,800;14..32,900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            font-family: 'Inter', sans-serif;
-            color: white;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ÉLITE COIFFURE — Abidjan, Côte d'Ivoire</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C8A45A;
+    --gold-light: #E8C97E;
+    --gold-dark: #8B6B2A;
+    --black: #0A0A0A;
+    --dark: #111111;
+    --dark2: #1A1A1A;
+    --white: #F8F4EE;
+    --ivory: #EDE8DF;
+    --accent: #D4AF6A;
+  }
 
-        /* Overlay UI (informations, boutons) */
-        .ui-overlay {
-            position: absolute;
-            z-index: 10;
-            width: 100%;
-            pointer-events: none; /* pour cliquer à travers sur le canvas sauf les boutons */
-        }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
 
-        /* Header stylé */
-        .header {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 2rem 3rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            backdrop-filter: blur(8px);
-            background: rgba(0,0,0,0.4);
-            border-bottom: 1px solid rgba(255,255,255,0.15);
-            box-sizing: border-box;
-            pointer-events: auto;
-            z-index: 20;
-        }
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
 
-        .logo h1 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #fff, #aa44ff, #00a6ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin: 0;
-        }
-        .logo p {
-            font-size: 0.7rem;
-            letter-spacing: 2px;
-            margin: 0;
-            opacity: 0.7;
-        }
+  .cursor {
+    position: fixed; width: 12px; height: 12px;
+    background: var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.1s ease;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1.5px solid var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transition: transform 0.15s ease, width 0.3s, height 0.3s, opacity 0.3s;
+    transform: translate(-50%, -50%); opacity: 0.6;
+  }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            font-weight: 600;
-        }
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            transition: 0.2s;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-        }
-        .nav-links a:hover {
-            color: #aa44ff;
-        }
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    padding: 1.5rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+    backdrop-filter: blur(4px);
+  }
+  .nav-logo {
+    font-family: 'Cinzel', serif; font-size: 1.6rem; font-weight: 900;
+    letter-spacing: 0.15em;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--ivory); text-decoration: none; font-size: 0.75rem;
+    letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.8;
+    transition: opacity 0.3s, color 0.3s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--gold); }
+  .nav-cta {
+    background: transparent; border: 1px solid var(--gold); color: var(--gold);
+    padding: 0.6rem 1.8rem; font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    cursor: none; transition: all 0.3s;
+  }
+  .nav-cta:hover { background: var(--gold); color: var(--black); }
 
-        /* Hero texte au centre */
-        .hero-text {
-            position: absolute;
-            top: 20%;
-            left: 5%;
-            transform: translateY(-30%);
-            pointer-events: none;
-            z-index: 15;
-            text-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-        .hero-text h2 {
-            font-size: 3.5rem;
-            font-weight: 900;
-            margin: 0;
-            letter-spacing: -1px;
-            background: linear-gradient(120deg, #fff, #ffcc44);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .hero-text p {
-            font-size: 1.1rem;
-            max-width: 450px;
-            margin-top: 0.5rem;
-            opacity: 0.9;
-        }
-        .hero-text .badge {
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            padding: 0.5rem 1rem;
-            border-radius: 40px;
-            display: inline-block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border-left: 3px solid #aa44ff;
-            margin-top: 1rem;
-        }
+  #hero {
+    position: relative; height: 100vh; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.85) 100%);
+    z-index: 2;
+  }
+  .hero-content {
+    position: relative; z-index: 3; text-align: center;
+    max-width: 900px; padding: 2rem;
+  }
+  .hero-badge {
+    display: inline-block; font-size: 0.65rem; letter-spacing: 0.4em;
+    text-transform: uppercase; color: var(--gold);
+    border: 1px solid rgba(200,164,90,0.4); padding: 0.4rem 1.5rem;
+    margin-bottom: 2rem; animation: fadeInUp 1s ease both;
+  }
+  .hero-title {
+    font-family: 'Cinzel', serif; font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 900; line-height: 0.9; letter-spacing: 0.05em;
+    margin-bottom: 1.5rem; animation: fadeInUp 1s 0.2s ease both;
+  }
+  .hero-title .gold-text {
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; display: block;
+  }
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem); color: var(--ivory); opacity: 0.75;
+    margin-bottom: 0.8rem; letter-spacing: 0.05em; animation: fadeInUp 1s 0.4s ease both;
+  }
+  .hero-location {
+    font-size: 0.7rem; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--gold); opacity: 0.8; margin-bottom: 3rem;
+    animation: fadeInUp 1s 0.5s ease both;
+  }
+  .hero-btns {
+    display: flex; gap: 1.5rem; justify-content: center;
+    animation: fadeInUp 1s 0.7s ease both;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--black); padding: 1rem 3rem; font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    border: none; cursor: none; text-decoration: none; display: inline-block;
+    transition: all 0.3s; clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(200,164,90,0.4); }
+  .btn-secondary {
+    background: transparent; color: var(--ivory); padding: 1rem 3rem;
+    font-family: 'Montserrat', sans-serif; font-size: 0.75rem; letter-spacing: 0.2em;
+    text-transform: uppercase; border: 1px solid rgba(248,244,238,0.3);
+    cursor: none; text-decoration: none; display: inline-block; transition: all 0.3s;
+    clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
 
-        /* CTA flottant */
-        .cta-button {
-            position: absolute;
-            bottom: 2rem;
-            right: 2rem;
-            background: #000000cc;
-            backdrop-filter: blur(12px);
-            padding: 0.8rem 2rem;
-            border-radius: 60px;
-            font-weight: 700;
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            cursor: pointer;
-            transition: 0.3s;
-            pointer-events: auto;
-            z-index: 20;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-        }
-        .cta-button:hover {
-            background: #aa44ff;
-            border-color: #aa44ff;
-            transform: scale(1.02);
-            box-shadow: 0 0 20px rgba(170,68,255,0.5);
-        }
+  .scroll-indicator {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    animation: fadeInUp 1s 1.2s ease both;
+  }
+  .scroll-indicator span {
+    font-size: 0.6rem; letter-spacing: 0.3em; color: var(--gold);
+    opacity: 0.6; text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
 
-        /* Info produit au survol (optionnel) */
-        .info-tip {
-            position: absolute;
-            bottom: 2rem;
-            left: 2rem;
-            background: rgba(0,0,0,0.5);
-            padding: 0.4rem 1rem;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            pointer-events: none;
-            font-weight: 300;
-            backdrop-filter: blur(4px);
-            z-index: 15;
-        }
+  .scissors-float {
+    position: absolute; z-index: 2; opacity: 0.06; font-size: 12rem;
+    animation: floatRotate 15s ease-in-out infinite; user-select: none;
+  }
+  .scissors-float:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; font-size: 8rem; }
+  .scissors-float:nth-child(2) { bottom: 15%; right: 8%; animation-delay: -5s; font-size: 14rem; }
+  .scissors-float:nth-child(3) { top: 40%; left: -3%; animation-delay: -10s; font-size: 6rem; opacity: 0.04; }
+  @keyframes floatRotate {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    33% { transform: translateY(-20px) rotate(8deg); }
+    66% { transform: translateY(10px) rotate(-5deg); }
+  }
 
-        @media (max-width: 800px) {
-            .hero-text h2 { font-size: 2rem; }
-            .hero-text { top: 15%; left: 5%; }
-            .header { padding: 1rem 1.5rem; }
-            .nav-links { gap: 1rem; }
-            .logo h1 { font-size: 1.2rem; }
-        }
-    </style>
+  .stats-strip {
+    background: var(--dark2);
+    border-top: 1px solid rgba(200,164,90,0.2);
+    border-bottom: 1px solid rgba(200,164,90,0.2);
+    padding: 2.5rem 4rem;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    text-align: center; gap: 2rem;
+  }
+  .stat-item { position: relative; }
+  .stat-item::after {
+    content: ''; position: absolute; right: 0; top: 50%;
+    transform: translateY(-50%); width: 1px; height: 50%;
+    background: rgba(200,164,90,0.2);
+  }
+  .stat-item:last-child::after { display: none; }
+  .stat-number {
+    font-family: 'Cinzel', serif; font-size: 2.8rem; font-weight: 700;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; display: block; line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--ivory); opacity: 0.5; margin-top: 0.5rem; display: block;
+  }
+
+  section { padding: 8rem 4rem; }
+  .section-eyebrow {
+    font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1rem; display: block;
+  }
+  .section-title {
+    font-family: 'Cinzel', serif; font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 700; line-height: 1.05; letter-spacing: 0.02em;
+  }
+  .section-title .line2 {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .section-sub {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--ivory);
+    opacity: 0.6; margin-top: 1.2rem; max-width: 550px; line-height: 1.8;
+  }
+  .gold-divider {
+    width: 80px; height: 2px;
+    background: linear-gradient(to right, var(--gold), transparent); margin: 1.5rem 0;
+  }
+
+  #services { background: var(--dark); position: relative; overflow: hidden; }
+  #services::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  .services-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 5rem; flex-wrap: wrap; gap: 2rem;
+  }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px; background: rgba(200,164,90,0.15);
+  }
+  .service-card {
+    background: var(--dark2); padding: 3.5rem 2.5rem; position: relative;
+    overflow: hidden; transition: all 0.5s cubic-bezier(0.4,0,0.2,1); cursor: none;
+  }
+  .service-card::before {
+    content: ''; position: absolute; bottom: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(to right, var(--gold), var(--gold-dark));
+    transform: scaleX(0); transform-origin: left; transition: transform 0.5s ease;
+  }
+  .service-card:hover { background: rgba(200,164,90,0.06); transform: translateY(-4px); }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-icon {
+    font-size: 2.8rem; margin-bottom: 1.5rem; display: block;
+    transition: transform 0.4s ease; filter: grayscale(0.3);
+  }
+  .service-card:hover .service-icon { transform: scale(1.1) rotate(-5deg); }
+  .service-tag {
+    font-size: 0.58rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); opacity: 0.7; margin-bottom: 0.8rem; display: block;
+  }
+  .service-name {
+    font-family: 'Cinzel', serif; font-size: 1.4rem; font-weight: 700;
+    margin-bottom: 1rem; color: var(--white);
+  }
+  .service-desc { font-size: 0.85rem; color: var(--ivory); opacity: 0.55; line-height: 1.7; margin-bottom: 1.5rem; }
+  .service-price {
+    font-family: 'Cinzel', serif; font-size: 1.3rem;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; font-weight: 700;
+  }
+  .service-arrow {
+    position: absolute; bottom: 2rem; right: 2.5rem; color: var(--gold);
+    opacity: 0; transition: all 0.3s; font-size: 1.2rem;
+  }
+  .service-card:hover .service-arrow { opacity: 1; transform: translateX(4px); }
+
+  #video-showcase { background: var(--black); padding: 6rem 4rem; position: relative; overflow: hidden; }
+  .video-section-inner {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+    align-items: center; max-width: 1400px; margin: 0 auto;
+  }
+  .video-wrapper {
+    position: relative; aspect-ratio: 9/16; max-height: 600px;
+    overflow: hidden; border: 1px solid rgba(200,164,90,0.25);
+  }
+  .video-overlay-text {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 3rem 2rem 2rem;
+    background: linear-gradient(to top, rgba(10,10,10,0.95), transparent);
+  }
+  .video-overlay-text h3 { font-family: 'Cinzel', serif; font-size: 1.3rem; margin-bottom: 0.4rem; }
+  .video-overlay-text p { font-size: 0.75rem; color: var(--gold); letter-spacing: 0.15em; }
+  .video-grid-small { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .video-thumb {
+    position: relative; aspect-ratio: 4/5; overflow: hidden;
+    border: 1px solid rgba(200,164,90,0.15); cursor: none; transition: transform 0.4s ease;
+  }
+  .video-thumb:hover { transform: scale(1.02); border-color: rgba(200,164,90,0.5); }
+  .video-thumb-label {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem 1rem 1rem;
+    background: linear-gradient(to top, rgba(10,10,10,0.9), transparent);
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold);
+  }
+  .play-btn {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 50px; height: 50px; border: 1.5px solid var(--gold); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold); font-size: 1.1rem; opacity: 0; transition: opacity 0.3s;
+  }
+  .video-thumb:hover .play-btn { opacity: 1; }
+
+  #team { background: var(--dark); position: relative; }
+  .team-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 5rem; align-items: start; margin-top: 4rem; }
+  .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  .team-card { position: relative; perspective: 800px; cursor: none; height: 350px; }
+  .team-card-inner {
+    position: relative; width: 100%; height: 100%;
+    transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+  }
+  .team-card:hover .team-card-inner { transform: rotateY(180deg); }
+  .team-card-front, .team-card-back {
+    position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  }
+  .team-card-front { background: var(--dark2); overflow: hidden; }
+  .team-card-front img { width: 100%; height: 75%; object-fit: cover; filter: grayscale(20%); }
+  .team-card-front-info { padding: 1rem 1.2rem; }
+  .team-name { font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 700; }
+  .team-role { font-size: 0.65rem; color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.8; margin-top: 0.2rem; }
+  .team-card-back {
+    background: linear-gradient(135deg, rgba(200,164,90,0.12), rgba(10,10,10,0.95));
+    border: 1px solid rgba(200,164,90,0.3); transform: rotateY(180deg);
+    display: flex; flex-direction: column; justify-content: center;
+    align-items: center; padding: 2rem; text-align: center;
+  }
+  .team-card-back .name { font-family: 'Cinzel', serif; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .team-card-back .bio { font-size: 0.8rem; opacity: 0.6; line-height: 1.6; margin-bottom: 1rem; }
+  .team-card-back .specialty {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); border: 1px solid rgba(200,164,90,0.3); padding: 0.3rem 1rem;
+  }
+
+  #gallery { background: var(--black); padding: 8rem 4rem; }
+  .gallery-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto; gap: 1rem; margin-top: 4rem;
+  }
+  .gallery-item { position: relative; overflow: hidden; background: var(--dark2); cursor: none; }
+  .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+  .gallery-item:nth-child(5) { grid-column: span 2; }
+  .gallery-placeholder {
+    width: 100%; aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center; font-size: 4rem;
+    background: linear-gradient(135deg, var(--dark2), var(--dark));
+    transition: transform 0.6s ease; position: relative; overflow: hidden;
+  }
+  .gallery-item:nth-child(1) .gallery-placeholder { font-size: 7rem; aspect-ratio: auto; height: 100%; min-height: 400px; }
+  .gallery-item:nth-child(5) .gallery-placeholder { aspect-ratio: 2/1; }
+  .gallery-placeholder::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(200,164,90,0.05) 0%, transparent 50%, rgba(200,164,90,0.08) 100%);
+  }
+  .gallery-item:hover .gallery-placeholder { transform: scale(1.05); }
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(10,10,10,0.8), transparent);
+    opacity: 0; transition: opacity 0.4s; display: flex;
+    flex-direction: column; justify-content: flex-end; padding: 1.5rem;
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-label { font-family: 'Cinzel', serif; font-size: 0.9rem; margin-bottom: 0.2rem; }
+  .gallery-cat { font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); }
+
+  #testimonials { background: var(--dark2); position: relative; overflow: hidden; }
+  #testimonials::before {
+    content: '"'; position: absolute; top: -2rem; left: 3rem;
+    font-family: 'Cinzel', serif; font-size: 25rem; color: var(--gold); opacity: 0.03;
+    line-height: 1; pointer-events: none;
+  }
+  .testimonials-inner { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 4rem; }
+  .testimonial-card {
+    background: var(--dark); border: 1px solid rgba(200,164,90,0.12); padding: 2.5rem;
+    position: relative; transition: all 0.4s;
+  }
+  .testimonial-card:hover { border-color: rgba(200,164,90,0.35); transform: translateY(-6px); box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+  .testimonial-card::before { content: '★★★★★'; display: block; color: var(--gold); font-size: 0.75rem; letter-spacing: 0.15em; margin-bottom: 1.2rem; }
+  .testimonial-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; color: var(--ivory); opacity: 0.75; line-height: 1.8; margin-bottom: 1.5rem; }
+  .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+  .author-avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cinzel', serif; font-weight: 700; color: var(--black); font-size: 1rem; flex-shrink: 0;
+  }
+  .author-name { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; }
+  .author-detail { font-size: 0.65rem; color: var(--gold); opacity: 0.7; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.15rem; }
+
+  #booking { background: var(--black); position: relative; padding: 8rem 4rem; overflow: hidden; }
+  .booking-bg-ornament {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 700px; height: 700px; border: 1px solid rgba(200,164,90,0.06); border-radius: 50%;
+  }
+  .booking-bg-ornament::before {
+    content: ''; position: absolute; inset: 50px;
+    border: 1px solid rgba(200,164,90,0.04); border-radius: 50%;
+  }
+  .booking-inner { max-width: 900px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
+  .booking-form { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 4rem; }
+  .form-group { position: relative; }
+  .form-group.full { grid-column: span 2; }
+  .form-input {
+    width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(200,164,90,0.2);
+    color: var(--white); padding: 1rem 1.5rem; font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem; outline: none; transition: border-color 0.3s; cursor: none;
+  }
+  .form-input:focus { border-color: var(--gold); }
+  .form-input::placeholder { color: rgba(248,244,238,0.25); font-size: 0.78rem; letter-spacing: 0.05em; }
+  select.form-input option { background: var(--dark2); }
+  .form-submit {
+    grid-column: span 2; background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--black); padding: 1.2rem 3rem; font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase;
+    border: none; cursor: none; transition: all 0.3s;
+    clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  }
+  .form-submit:hover { box-shadow: 0 15px 40px rgba(200,164,90,0.35); transform: translateY(-2px); }
+
+  #location { background: var(--dark); padding: 6rem 4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+  .location-map {
+    aspect-ratio: 4/3; background: var(--dark2); border: 1px solid rgba(200,164,90,0.2);
+    position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
+  }
+  .map-placeholder { display: flex; flex-direction: column; align-items: center; gap: 1rem; color: var(--gold); opacity: 0.5; }
+  .map-pin { font-size: 3rem; animation: bounce 2s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .map-placeholder p { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; }
+  .contact-item { display: flex; gap: 1.5rem; align-items: flex-start; margin-bottom: 2.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid rgba(200,164,90,0.1); }
+  .contact-item:last-child { border-bottom: none; }
+  .contact-icon {
+    width: 50px; height: 50px; background: rgba(200,164,90,0.1); border: 1px solid rgba(200,164,90,0.2);
+    display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; transition: all 0.3s;
+  }
+  .contact-item:hover .contact-icon { background: rgba(200,164,90,0.2); border-color: var(--gold); }
+  .contact-label { font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); opacity: 0.7; margin-bottom: 0.3rem; }
+  .contact-value { font-size: 0.95rem; color: var(--ivory); line-height: 1.6; }
+
+  footer {
+    background: var(--dark2); border-top: 1px solid rgba(200,164,90,0.15); padding: 4rem;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; align-items: start;
+  }
+  .footer-logo {
+    font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 900;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1.2rem;
+  }
+  .footer-tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.95rem; color: var(--ivory); opacity: 0.45; line-height: 1.7; margin-bottom: 2rem; max-width: 280px; }
+  .footer-social { display: flex; gap: 1rem; }
+  .social-btn {
+    width: 38px; height: 38px; border: 1px solid rgba(200,164,90,0.2);
+    display: flex; align-items: center; justify-content: center; color: var(--ivory);
+    text-decoration: none; font-size: 0.9rem; opacity: 0.5; transition: all 0.3s;
+  }
+  .social-btn:hover { opacity: 1; border-color: var(--gold); color: var(--gold); }
+  .footer-col h4 { font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 1.5rem; text-transform: uppercase; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 0.7rem; }
+  .footer-col ul li a { color: var(--ivory); text-decoration: none; font-size: 0.82rem; opacity: 0.45; transition: opacity 0.3s, color 0.3s; letter-spacing: 0.02em; }
+  .footer-col ul li a:hover { opacity: 0.9; color: var(--gold); }
+  .footer-bottom { background: var(--black); border-top: 1px solid rgba(200,164,90,0.1); padding: 1.5rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-size: 0.7rem; color: var(--ivory); opacity: 0.3; letter-spacing: 0.1em; }
+  .footer-made { font-size: 0.65rem; color: var(--gold); opacity: 0.4; letter-spacing: 0.1em; }
+
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  .whatsapp-float {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+    width: 58px; height: 58px; background: #25D366; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+    box-shadow: 0 8px 30px rgba(37,211,102,0.4); cursor: none; transition: transform 0.3s, box-shadow 0.3s;
+    text-decoration: none; animation: waPulse 3s ease-in-out infinite;
+  }
+  .whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 12px 40px rgba(37,211,102,0.6); }
+  @keyframes waPulse { 0%,100%{box-shadow:0 8px 30px rgba(37,211,102,0.4)} 50%{box-shadow:0 8px 50px rgba(37,211,102,0.7)} }
+
+  @media (max-width: 1024px) {
+    nav { padding: 1.2rem 2rem; }
+    .nav-links { display: none; }
+    section { padding: 5rem 2rem; }
+    .stats-strip { grid-template-columns: repeat(2, 1fr); padding: 2rem; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .testimonials-inner { grid-template-columns: 1fr 1fr; }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-item:nth-child(1) { grid-column: span 2; }
+    .gallery-item:nth-child(5) { grid-column: span 2; }
+    footer { grid-template-columns: 1fr 1fr; }
+    #location { grid-template-columns: 1fr; }
+    .team-layout { grid-template-columns: 1fr; }
+    .video-section-inner { grid-template-columns: 1fr; }
+    .booking-form { grid-template-columns: 1fr; }
+    .form-group.full, .form-submit { grid-column: span 1; }
+  }
+  @media (max-width: 640px) {
+    nav { padding: 1rem 1.5rem; }
+    .hero-btns { flex-direction: column; align-items: center; }
+    .services-grid { grid-template-columns: 1fr; }
+    .team-grid { grid-template-columns: 1fr 1fr; }
+    .testimonials-inner { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    footer { grid-template-columns: 1fr; }
+    #location { padding: 4rem 1.5rem; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
 </head>
 <body>
 
-<div class="ui-overlay">
-    <div class="header">
-        <div class="logo">
-            <h1>STREET³</h1>
-            <p>URBAN // 3D SHOWROOM</p>
-        </div>
-        <div class="nav-links">
-            <a href="#">NEW</a>
-            <a href="#">SNEAKERS</a>
-            <a href="#">PANTS</a>
-            <a href="#">ADIDAS</a>
-            <a href="#">NIKE TN</a>
-        </div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <div class="nav-logo">ÉLITE COIFFURE</div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#team">Équipe</a></li>
+    <li><a href="#gallery">Galerie</a></li>
+    <li><a href="#testimonials">Avis</a></li>
+    <li><a href="#location">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">Réserver</button>
+</nav>
+
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="scissors-float">✂</div>
+  <div class="scissors-float">✂</div>
+  <div class="scissors-float">✂</div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">✦ Salon de Coiffure Premium ✦</div>
+    <h1 class="hero-title">
+      L'ART DE<br>
+      <span class="gold-text">LA BEAUTÉ</span>
+    </h1>
+    <p class="hero-sub">Hommes · Femmes · Enfants — Expertise & Élégance</p>
+    <p class="hero-location">📍 Abidjan, Côte d'Ivoire</p>
+    <div class="hero-btns">
+      <a href="#booking" class="btn-primary">Prendre Rendez-vous</a>
+      <a href="#services" class="btn-secondary">Découvrir</a>
     </div>
-    <div class="hero-text">
-        <h2>STREETWEAR<br>3D EDITION</h2>
-        <p>Pantalons modernes, buggy jeans, <br>Nike TN, Adidas Originals & plus.</p>
-        <div class="badge">✨ Édition limitée ✨</div>
-    </div>
-    <div class="cta-button" id="exploreBtn">EXPLORE LA COLLECTION →</div>
-    <div class="info-tip">🖱️ Faites glisser pour voir la scène 3D | Carrousel interactif</div>
+  </div>
+  <div class="scroll-indicator">
+    <span>Défiler</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<div class="stats-strip">
+  <div class="stat-item reveal"><span class="stat-number">8+</span><span class="stat-label">Années d'expérience</span></div>
+  <div class="stat-item reveal"><span class="stat-number">5K+</span><span class="stat-label">Clients satisfaits</span></div>
+  <div class="stat-item reveal"><span class="stat-number">12</span><span class="stat-label">Spécialistes certifiés</span></div>
+  <div class="stat-item reveal"><span class="stat-number">4.9★</span><span class="stat-label">Note Google</span></div>
 </div>
 
-<!-- Import Three.js core + extensions -->
-<script type="importmap">
-    {
-        "imports": {
-            "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
-        }
-    }
-</script>
+<section id="services">
+  <div class="services-header">
+    <div>
+      <span class="section-eyebrow">✦ Ce que nous faisons</span>
+      <h2 class="section-title">Nos <span class="line2">Services</span></h2>
+      <div class="gold-divider"></div>
+      <p class="section-sub">Des prestations haut de gamme adaptées à toute la famille, réalisées par des experts passionnés.</p>
+    </div>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <span class="service-icon">💈</span>
+      <span class="service-tag">Pour Lui</span>
+      <div class="service-name">Coupe Homme</div>
+      <p class="service-desc">Coupe moderne ou classique, dégradé précis, rasage soigné au rasoir droit. Le gentleman qui sommeille en vous, révélé.</p>
+      <div class="service-price">À partir de 2 000 FCFA</div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">🧔</span>
+      <span class="service-tag">Barbe & Style</span>
+      <div class="service-name">Barbe Sculptée</div>
+      <p class="service-desc">Taille et mise en forme de barbe, soin nourrissant, contours nets. Une barbe parfaite pour un style affirmé.</p>
+      <div class="service-price">À partir de 1 500 FCFA</div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">👑</span>
+      <span class="service-tag">Premium</span>
+      <div class="service-name">Forfait Royal</div>
+      <p class="service-desc">Coupe + barbe + soin du visage + finition huile. L'expérience ultime du gentleman ivoirien.</p>
+      <div class="service-price">À partir de 5 000 FCFA</div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">💇‍♀️</span>
+      <span class="service-tag">Pour Elle</span>
+      <div class="service-name">Coupe & Coiffage</div>
+      <p class="service-desc">Coupe tendance, brushing professionnel, mise en plis et coiffures de soirée sublimes.</p>
+      <div class="service-price">À partir de 3 000 FCFA</div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">✨</span>
+      <span class="service-tag">Tresses & Locks</span>
+      <div class="service-name">Tresses Africaines</div>
+      <p class="service-desc">Box braids, cornrows, twists, locks ivoiriennes. Nos spécialistes valorisent la beauté de vos cheveux naturels.</p>
+      <div class="service-price">À partir de 8 000 FCFA</div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">🌿</span>
+      <span class="service-tag">Soin Capillaire</span>
+      <div class="service-name">Traitement & Soin</div>
+      <p class="service-desc">Lissage, coloration naturelle, soins kératine, masques nourrissants. Des cheveux sains et brillants.</p>
+      <div class="service-price">À partir de 6 000 FCFA</div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">👦</span>
+      <span class="service-tag">Pour les Enfants</span>
+      <div class="service-name">Coupe Enfant Garçon</div>
+      <p class="service-desc">Coupe stylée pour les petits hommes de demain. Ambiance douce et accueillante pour les tout-petits.</p>
+      <div class="service-price">À partir de 1 200 FCFA</div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">👧</span>
+      <span class="service-tag">Pour les Enfants</span>
+      <div class="service-name">Coiffure Petite Fille</div>
+      <p class="service-desc">Tresses, nattes, coupes mignonnes pour vos princesses. Produits doux et adaptés aux cheveux des enfants.</p>
+      <div class="service-price">À partir de 2 000 FCFA</div>
+      <div class="service-arrow">→</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">🎁</span>
+      <span class="service-tag">Offre Famille</span>
+      <div class="service-name">Pack Famille</div>
+      <p class="service-desc">Venez en famille et bénéficiez d'un tarif spécial. Papa, maman et les enfants — tout le monde repart beau!</p>
+      <div class="service-price">Tarif sur devis</div>
+      <div class="service-arrow">→</div>
+    </div>
+  </div>
+</section>
 
-<script type="module">
-    import * as THREE from 'three';
-    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-    import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+<section id="video-showcase">
+  <div style="text-align:center;margin-bottom:3rem;">
+    <span class="section-eyebrow">✦ L'art en action</span>
+    <h2 class="section-title reveal">Notre <span class="line2">Savoir-Faire</span></h2>
+  </div>
+  <div class="video-section-inner">
+    <div class="video-wrapper reveal">
+      <canvas id="videoCanvas" style="width:100%;height:100%;position:absolute;inset:0;"></canvas>
+      <div class="video-overlay-text">
+        <h3>Coupe & Style Premium</h3>
+        <p>✦ Le geste qui transforme</p>
+      </div>
+    </div>
+    <div>
+      <p class="section-sub reveal" style="margin-bottom:2.5rem;">Chaque coupe est une œuvre. Nos artistes capillaires maîtrisent les dernières tendances mondiales, adaptées à la beauté africaine.</p>
+      <div class="video-grid-small">
+        <div class="video-thumb reveal">
+          <canvas class="mini-canvas" data-scene="barbe" style="width:100%;height:100%;position:absolute;inset:0;"></canvas>
+          <div class="play-btn">▶</div>
+          <div class="video-thumb-label">Barbe & Rasage</div>
+        </div>
+        <div class="video-thumb reveal">
+          <canvas class="mini-canvas" data-scene="tresses" style="width:100%;height:100%;position:absolute;inset:0;"></canvas>
+          <div class="play-btn">▶</div>
+          <div class="video-thumb-label">Tresses Africaines</div>
+        </div>
+        <div class="video-thumb reveal">
+          <canvas class="mini-canvas" data-scene="enfant" style="width:100%;height:100%;position:absolute;inset:0;"></canvas>
+          <div class="play-btn">▶</div>
+          <div class="video-thumb-label">Espace Enfants</div>
+        </div>
+        <div class="video-thumb reveal">
+          <canvas class="mini-canvas" data-scene="soin" style="width:100%;height:100%;position:absolute;inset:0;"></canvas>
+          <div class="play-btn">▶</div>
+          <div class="video-thumb-label">Soins & Traitements</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    // --- INITIALISATION SCENE ---
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x050510); // fond profond
-    scene.fog = new THREE.FogExp2(0x050510, 0.008); // brume légère
-    
-    // Caméra perspective
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(6, 4, 8);
-    camera.lookAt(0, 0, 0);
-    
-    // Renderer principal
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true; // ombres pour le réalisme
-    renderer.setPixelRatio(window.devicePixelRatio);
-    document.body.appendChild(renderer.domElement);
-    
-    // Contrôles Orbit pour que l'utilisateur explore la 3D
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.autoRotate = false;
-    controls.enableZoom = true;
-    controls.zoomSpeed = 1.2;
-    controls.rotateSpeed = 1.0;
-    controls.target.set(0, 1, 0);
-    
-    // --- LUMIERES (ambiance streetwear néon) ---
-    // Lumière ambiante
-    const ambientLight = new THREE.AmbientLight(0x222222);
-    scene.add(ambientLight);
-    // Directional light principale
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1);
-    mainLight.position.set(3, 5, 2);
-    mainLight.castShadow = true;
-    mainLight.receiveShadow = true;
-    mainLight.shadow.mapSize.width = 1024;
-    mainLight.shadow.mapSize.height = 1024;
-    scene.add(mainLight);
-    // Remplissage arrière
-    const backLight = new THREE.PointLight(0x4466ff, 0.5);
-    backLight.position.set(-2, 2, -4);
-    scene.add(backLight);
-    // Accents néon violets
-    const neonPurple = new THREE.PointLight(0xaa44ff, 0.8);
-    neonPurple.position.set(2, 1.5, 3);
-    scene.add(neonPurple);
-    // Lumière chaude au sol
-    const fillLight = new THREE.PointLight(0xffaa44, 0.4);
-    fillLight.position.set(1, 1, 2);
-    scene.add(fillLight);
-    
-    // Effet de particules flottantes (ambiance)
-    const particleCount = 1200;
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlePositions = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount; i++) {
-        particlePositions[i*3] = (Math.random() - 0.5) * 40;
-        particlePositions[i*3+1] = (Math.random() - 0.5) * 15;
-        particlePositions[i*3+2] = (Math.random() - 0.5) * 20 - 10;
+<section id="team">
+  <span class="section-eyebrow">✦ Les Artistes</span>
+  <h2 class="section-title reveal">Notre <span class="line2">Équipe</span></h2>
+  <div class="gold-divider"></div>
+  <div class="team-layout">
+    <div class="reveal">
+      <p class="section-sub">Des professionnels certifiés, passionnés par leur art. Survolez une carte pour découvrir leur spécialité.</p>
+      <br><br>
+      <div style="background:rgba(200,164,90,0.06);border:1px solid rgba(200,164,90,0.15);padding:2rem;">
+        <div style="font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">Horaires d'ouverture</div>
+        <div style="font-size:0.9rem;opacity:0.7;line-height:2;">
+          Lundi – Vendredi : 8h00 – 20h00<br>
+          Samedi : 8h00 – 21h00<br>
+          Dimanche : 10h00 – 18h00
+        </div>
+      </div>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-card-inner">
+          <div class="team-card-front">
+            <div style="width:100%;height:75%;background:linear-gradient(135deg,#1a1a1a,#2a2a2a);display:flex;align-items:center;justify-content:center;font-size:5rem;">👨‍🦱</div>
+            <div class="team-card-front-info"><div class="team-name">Kouassi Jean</div><div class="team-role">Maître Barbier</div></div>
+          </div>
+          <div class="team-card-back">
+            <div class="name">Kouassi Jean</div>
+            <p class="bio">10 ans d'expérience. Spécialiste des dégradés et coupes afro modernes. Formé à Paris et Abidjan.</p>
+            <span class="specialty">Dégradé · Barbe</span>
+          </div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-card-inner">
+          <div class="team-card-front">
+            <div style="width:100%;height:75%;background:linear-gradient(135deg,#1a1a2a,#2a1a2a);display:flex;align-items:center;justify-content:center;font-size:5rem;">👩‍🦱</div>
+            <div class="team-card-front-info"><div class="team-name">Aya Koné</div><div class="team-role">Spécialiste Tresses</div></div>
+          </div>
+          <div class="team-card-back">
+            <div class="name">Aya Koné</div>
+            <p class="bio">Artiste des cheveux naturels. Experte en box braids, twists et coiffures traditionnelles ivoiriennes.</p>
+            <span class="specialty">Tresses · Locks</span>
+          </div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-card-inner">
+          <div class="team-card-front">
+            <div style="width:100%;height:75%;background:linear-gradient(135deg,#2a1a1a,#2a2a1a);display:flex;align-items:center;justify-content:center;font-size:5rem;">👨‍🦲</div>
+            <div class="team-card-front-info"><div class="team-name">Brice Touré</div><div class="team-role">Styliste Senior</div></div>
+          </div>
+          <div class="team-card-back">
+            <div class="name">Brice Touré</div>
+            <p class="bio">Champion de Côte d'Ivoire de coiffure 2022. Spécialiste des coupes tendance et des designs artistiques.</p>
+            <span class="specialty">Designs · Art</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="gallery">
+  <span class="section-eyebrow">✦ Notre Réalisation</span>
+  <h2 class="section-title reveal">Galerie <span class="line2">Artistique</span></h2>
+  <div class="gold-divider"></div>
+  <div class="gallery-grid">
+    <div class="gallery-item reveal">
+      <div class="gallery-placeholder" style="background:linear-gradient(135deg,#1a1200,#2a2000);">
+        <span style="font-size:8rem;filter:drop-shadow(0 0 30px rgba(200,164,90,0.4))">💈</span>
+      </div>
+      <div class="gallery-overlay"><div class="gallery-label">Coupe Dégradé Fade</div><div class="gallery-cat">Style Homme — Premium</div></div>
+    </div>
+    <div class="gallery-item reveal">
+      <div class="gallery-placeholder"><span>✂️</span></div>
+      <div class="gallery-overlay"><div class="gallery-label">Ciseau d'Or</div><div class="gallery-cat">Précision & Art</div></div>
+    </div>
+    <div class="gallery-item reveal">
+      <div class="gallery-placeholder" style="background:linear-gradient(135deg,#12001a,#200028);"><span>👑</span></div>
+      <div class="gallery-overlay"><div class="gallery-label">Tresse Royale</div><div class="gallery-cat">Style Femme — Tresses</div></div>
+    </div>
+    <div class="gallery-item reveal">
+      <div class="gallery-placeholder" style="background:linear-gradient(135deg,#001a10,#002018);"><span>🧔</span></div>
+      <div class="gallery-overlay"><div class="gallery-label">Barbe Sculptée</div><div class="gallery-cat">Style Gentleman</div></div>
+    </div>
+    <div class="gallery-item reveal">
+      <div class="gallery-placeholder" style="background:linear-gradient(135deg,#1a1000,#261800);"><span>🌟</span></div>
+      <div class="gallery-overlay"><div class="gallery-label">Soirée Gala</div><div class="gallery-cat">Coiffure de Cérémonie</div></div>
+    </div>
+    <div class="gallery-item reveal">
+      <div class="gallery-placeholder" style="background:linear-gradient(135deg,#001a1a,#001e26);"><span>🎀</span></div>
+      <div class="gallery-overlay"><div class="gallery-label">Petite Princesse</div><div class="gallery-cat">Style Enfant — Fille</div></div>
+    </div>
+    <div class="gallery-item reveal">
+      <div class="gallery-placeholder" style="background:linear-gradient(135deg,#1a0010,#200018);"><span>🔥</span></div>
+      <div class="gallery-overlay"><div class="gallery-label">Box Braids Design</div><div class="gallery-cat">Tendance Africaine</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="testimonials">
+  <div style="text-align:center;margin-bottom:1rem;">
+    <span class="section-eyebrow">✦ Ce qu'ils disent</span>
+    <h2 class="section-title reveal">Ils Nous <span class="line2">Font Confiance</span></h2>
+  </div>
+  <div class="testimonials-inner">
+    <div class="testimonial-card reveal">
+      <p class="testimonial-text">« Le meilleur salon d'Abidjan, sans hésitation. Mon dégradé est toujours parfait, et l'ambiance est vraiment agréable. Je recommande à tous ! »</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">K</div>
+        <div><div class="author-name">Koffi Mensah</div><div class="author-detail">Client régulier · Cocody</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal">
+      <p class="testimonial-text">« Aya a transformé mes cheveux ! Mes box braids sont magnifiques et ont tenu 3 mois. Une vraie artiste, service impeccable. »</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">F</div>
+        <div><div class="author-name">Fatou Diallo</div><div class="author-detail">Cliente · Marcory</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal">
+      <p class="testimonial-text">« J'y amène mes enfants chaque mois. Ils sont patients avec les petits et le résultat est toujours beau. Un vrai salon familial ! »</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">M</div>
+        <div><div class="author-name">Marie Coulibaly</div><div class="author-detail">Maman de 3 enfants · Yopougon</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="booking">
+  <div class="booking-bg-ornament"></div>
+  <div class="booking-inner">
+    <span class="section-eyebrow" style="display:block;text-align:center;">✦ Réservation</span>
+    <h2 class="section-title reveal" style="text-align:center;">Prendre <span class="line2">Rendez-vous</span></h2>
+    <div class="gold-divider" style="margin:1.5rem auto;"></div>
+    <p class="section-sub reveal" style="margin:0 auto;text-align:center;">Réservez votre créneau en ligne et bénéficiez de nos services premium. Confirmation immédiate par WhatsApp.</p>
+    <form class="booking-form reveal" onsubmit="handleBooking(event)">
+      <div class="form-group"><input type="text" class="form-input" placeholder="Votre prénom et nom" required></div>
+      <div class="form-group"><input type="tel" class="form-input" placeholder="Numéro WhatsApp (ex: +225 07 XX XX XX XX)" required></div>
+      <div class="form-group">
+        <select class="form-input" required>
+          <option value="" disabled selected>Choisir un service</option>
+          <optgroup label="Pour Lui">
+            <option>Coupe Homme (2 000 FCFA)</option>
+            <option>Barbe Sculptée (1 500 FCFA)</option>
+            <option>Forfait Royal (5 000 FCFA)</option>
+          </optgroup>
+          <optgroup label="Pour Elle">
+            <option>Coupe & Coiffage (3 000 FCFA)</option>
+            <option>Tresses Africaines (8 000 FCFA)</option>
+            <option>Traitement & Soin (6 000 FCFA)</option>
+          </optgroup>
+          <optgroup label="Pour les Enfants">
+            <option>Coupe Enfant Garçon (1 200 FCFA)</option>
+            <option>Coiffure Petite Fille (2 000 FCFA)</option>
+          </optgroup>
+          <option>Pack Famille (devis)</option>
+        </select>
+      </div>
+      <div class="form-group"><input type="date" class="form-input" required></div>
+      <div class="form-group">
+        <select class="form-input">
+          <option>08:00</option><option>09:00</option><option>10:00</option>
+          <option>11:00</option><option>12:00</option><option>13:00</option>
+          <option>14:00</option><option>15:00</option><option>16:00</option>
+          <option>17:00</option><option>18:00</option><option>19:00</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <select class="form-input">
+          <option value="" disabled selected>Choisir votre coiffeur</option>
+          <option>Kouassi Jean – Maître Barbier</option>
+          <option>Aya Koné – Spécialiste Tresses</option>
+          <option>Brice Touré – Styliste Senior</option>
+          <option>Pas de préférence</option>
+        </select>
+      </div>
+      <div class="form-group full"><textarea class="form-input" rows="3" placeholder="Message ou demande spéciale (optionnel)" style="resize:vertical;"></textarea></div>
+      <button type="submit" class="form-submit">✦ Confirmer Ma Réservation ✦</button>
+    </form>
+  </div>
+</section>
+
+<section id="location">
+  <div class="reveal">
+    <span class="section-eyebrow">✦ Nous trouver</span>
+    <h2 class="section-title">Venez Nous <span class="line2">Rendre Visite</span></h2>
+    <div class="gold-divider"></div>
+    <div class="contact-item">
+      <div class="contact-icon">📍</div>
+      <div><div class="contact-label">Adresse</div><div class="contact-value">Rue des Jardins, Cocody<br>Abidjan, Côte d'Ivoire</div></div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-icon">📱</div>
+      <div><div class="contact-label">Téléphone & WhatsApp</div><div class="contact-value">+225 07 XX XX XX XX<br>+225 05 XX XX XX XX</div></div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-icon">⏰</div>
+      <div><div class="contact-label">Horaires</div><div class="contact-value">Lun – Ven : 8h00 – 20h00<br>Sam : 8h00 – 21h00 | Dim : 10h – 18h</div></div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-icon">📸</div>
+      <div><div class="contact-label">Réseaux sociaux</div><div class="contact-value">@EliteCoiffureCI<br>Instagram · Facebook · TikTok</div></div>
+    </div>
+  </div>
+  <div class="location-map reveal">
+    <div class="map-placeholder">
+      <div class="map-pin">📍</div>
+      <p>Cocody, Abidjan</p>
+      <p style="font-size:0.6rem;margin-top:0.5rem;opacity:0.5">Côte d'Ivoire</p>
+    </div>
+    <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.08;" xmlns="http://www.w3.org/2000/svg">
+      <defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#C8A45A" stroke-width="0.5"/></pattern></defs>
+      <rect width="100%" height="100%" fill="url(#grid)"/>
+    </svg>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="footer-logo">ÉLITE COIFFURE</div>
+    <p class="footer-tagline">L'art de révéler votre beauté. Depuis 2016, votre salon de référence à Abidjan.</p>
+    <div class="footer-social">
+      <a href="#" class="social-btn">f</a>
+      <a href="#" class="social-btn">ig</a>
+      <a href="#" class="social-btn">tt</a>
+      <a href="#" class="social-btn">wa</a>
+    </div>
+  </div>
+  <div class="footer-col">
+    <h4>Services</h4>
+    <ul>
+      <li><a href="#">Coupe Homme</a></li>
+      <li><a href="#">Barbe & Rasage</a></li>
+      <li><a href="#">Coiffure Femme</a></li>
+      <li><a href="#">Tresses Africaines</a></li>
+      <li><a href="#">Soins Capillaires</a></li>
+      <li><a href="#">Espace Enfants</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Navigation</h4>
+    <ul>
+      <li><a href="#services">Nos Services</a></li>
+      <li><a href="#team">L'Équipe</a></li>
+      <li><a href="#gallery">Galerie</a></li>
+      <li><a href="#testimonials">Avis Clients</a></li>
+      <li><a href="#booking">Réservation</a></li>
+      <li><a href="#location">Contact</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Contact</h4>
+    <ul>
+      <li><a href="#">📍 Cocody, Abidjan</a></li>
+      <li><a href="#">📱 +225 07 XX XX XX</a></li>
+      <li><a href="#">✉ contact@elitecoiffure.ci</a></li>
+      <li><a href="#" style="color:var(--gold);opacity:0.8;margin-top:1rem;display:inline-block;">Réserver →</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p class="footer-copy">© 2024 Élite Coiffure. Tous droits réservés. Abidjan, Côte d'Ivoire.</p>
+  <p class="footer-made">Beauté · Élégance · Excellence ✦</p>
+</div>
+
+<a href="https://wa.me/2250700000000" class="whatsapp-float" title="WhatsApp">💬</a>
+
+<script>
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+});
+function animateRing() {
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 80); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+revealEls.forEach(el => observer.observe(el));
+
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], mx2 = 0, my2 = 0;
+  function resize() { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  document.addEventListener('mousemove', e => { mx2 = e.clientX; my2 = e.clientY; });
+  class Particle {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random()*W; this.y = Math.random()*H;
+      this.vx = (Math.random()-0.5)*0.4; this.vy = (Math.random()-0.5)*0.4;
+      this.size = Math.random()*1.8+0.4; this.opacity = Math.random()*0.5+0.1;
+      this.color = Math.random()<0.7?'#C8A45A':'#E8C97E';
     }
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-    const particleMaterial = new THREE.PointsMaterial({
-        color: 0x88aaff,
-        size: 0.08,
-        transparent: true,
-        opacity: 0.5,
-        blending: THREE.AdditiveBlending
+    update() {
+      const dx = mx2-this.x, dy = my2-this.y, dist = Math.sqrt(dx*dx+dy*dy);
+      if (dist<200) { this.vx += dx/dist*0.02; this.vy += dy/dist*0.02; }
+      this.vx *= 0.98; this.vy *= 0.98;
+      this.x += this.vx; this.y += this.vy;
+      if(this.x<0||this.x>W) this.vx*=-1;
+      if(this.y<0||this.y>H) this.vy*=-1;
+    }
+    draw() {
+      ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+      ctx.fillStyle = this.color; ctx.globalAlpha = this.opacity; ctx.fill();
+    }
+  }
+  for(let i=0;i<140;i++) particles.push(new Particle());
+  function drawConnections() {
+    for(let i=0;i<particles.length;i++) {
+      for(let j=i+1;j<particles.length;j++) {
+        const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<100){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle='#C8A45A';ctx.globalAlpha=(1-d/100)*0.12;ctx.lineWidth=0.5;ctx.stroke();}
+      }
+    }
+  }
+  function loop() {
+    ctx.clearRect(0,0,W,H); ctx.globalAlpha=1;
+    drawConnections(); particles.forEach(p=>{p.update();p.draw();}); ctx.globalAlpha=1;
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+function createSceneCanvas(canvas, scene) {
+  const ctx = canvas.getContext('2d');
+  let W = canvas.offsetWidth, H = canvas.offsetHeight;
+  canvas.width = W; canvas.height = H;
+  const colors = { barbe:['#3a2000','#C8A45A','#8B6B2A'], tresses:['#200030','#C8A45A','#9B59B6'], enfant:['#002030','#C8A45A','#3498DB'], soin:['#003020','#C8A45A','#2ECC71'] };
+  const c = colors[scene]||colors.barbe;
+  let parts = [];
+  for(let i=0;i<40;i++) parts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*0.6,vy:(Math.random()-.5)*0.6,r:Math.random()*3+1,op:Math.random()*0.6+0.2});
+  const icons = {barbe:'🧔',tresses:'👑',enfant:'🎀',soin:'✨'};
+  const icon = icons[scene]||'✂️';
+  let t = 0;
+  function draw() {
+    W=canvas.offsetWidth; H=canvas.offsetHeight; canvas.width=W; canvas.height=H;
+    const g=ctx.createLinearGradient(0,0,W,H); g.addColorStop(0,c[0]); g.addColorStop(1,'#0a0a0a');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    parts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=c[1]; ctx.globalAlpha=p.op; ctx.fill();
     });
-    const particles = new THREE.Points(particlesGeometry, particleMaterial);
-    scene.add(particles);
-    
-    // Sol élégant avec grille et effet miroir
-    const gridHelper = new THREE.GridHelper(20, 30, 0xaa44ff, 0x3366aa);
-    gridHelper.position.y = -1.2;
-    gridHelper.material.transparent = true;
-    gridHelper.material.opacity = 0.4;
-    scene.add(gridHelper);
-    
-    // Un plan réfléchissant très subtil
-    const mirrorPlaneMat = new THREE.MeshStandardMaterial({ color: 0x111122, roughness: 0.2, metalness: 0.7, transparent: true, opacity: 0.3 });
-    const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), mirrorPlaneMat);
-    groundPlane.rotation.x = -Math.PI / 2;
-    groundPlane.position.y = -1.25;
-    groundPlane.receiveShadow = true;
-    scene.add(groundPlane);
-    
-    // --- MODÈLE 3D CENTRAL : SNEAKER STYLÉE (Nike TN / Adidas vibe) ---
-    const shoeGroup = new THREE.Group();
-    
-    // Base de la semelle
-    const sole = new THREE.Mesh(
-        new THREE.BoxGeometry(1.6, 0.25, 0.9),
-        new THREE.MeshStandardMaterial({ color: 0xddddff, roughness: 0.3, metalness: 0.4, emissive: 0x111122 })
-    );
-    sole.position.y = -0.2;
-    sole.castShadow = true;
-    shoeGroup.add(sole);
-    
-    // Corps principal (toe box)
-    const upper = new THREE.Mesh(
-        new THREE.BoxGeometry(1.2, 0.5, 0.85),
-        new THREE.MeshStandardMaterial({ color: 0xcc3333, roughness: 0.2, metalness: 0.1, emissive: 0x330000 })
-    );
-    upper.position.set(0.1, 0.1, 0);
-    upper.castShadow = true;
-    shoeGroup.add(upper);
-    
-    // Talon arrondi
-    const heel = new THREE.Mesh(
-        new THREE.SphereGeometry(0.45, 24, 24),
-        new THREE.MeshStandardMaterial({ color: 0xaa3333, roughness: 0.2 })
-    );
-    heel.position.set(-0.65, 0.05, 0);
-    heel.scale.set(0.7, 0.5, 0.8);
-    heel.castShadow = true;
-    shoeGroup.add(heel);
-    
-    // Détail swoosh stylé (bande)
-    const swoosh = new THREE.Mesh(
-        new THREE.TorusGeometry(0.45, 0.07, 16, 64, Math.PI),
-        new THREE.MeshStandardMaterial({ color: 0xffaa44, metalness: 0.7, emissive: 0x442200 })
-    );
-    swoosh.rotation.z = 0.7;
-    swoosh.rotation.x = 0.2;
-    swoosh.position.set(0.3, 0.2, 0.55);
-    shoeGroup.add(swoosh);
-    
-    // Lacets (petits cylindres)
-    const laceColor = 0xffffff;
-    for (let i = -0.3; i <= 0.5; i+=0.4) {
-        const lace = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.05, 0.05, 0.2, 6),
-            new THREE.MeshStandardMaterial({ color: laceColor, emissive: 0x444444 })
-        );
-        lace.position.set(i, 0.35, 0.65);
-        lace.rotation.x = 0.5;
-        shoeGroup.add(lace);
-    }
-    
-    // Logo TN style sur le côté
-    const tnDecal = new THREE.Mesh(
-        new THREE.BoxGeometry(0.25, 0.1, 0.02),
-        new THREE.MeshStandardMaterial({ color: 0xffaa55, metalness: 0.9 })
-    );
-    tnDecal.position.set(-0.1, 0.15, 0.75);
-    shoeGroup.add(tnDecal);
-    
-    shoeGroup.position.set(0, 0.4, 0);
-    shoeGroup.scale.set(0.9, 0.9, 0.9);
-    shoeGroup.castShadow = true;
-    scene.add(shoeGroup);
-    
-    // Ajout d'une petite couronne de particules lumineuses autour de la sneaker
-    const glowRingGeo = new THREE.BufferGeometry();
-    const ringPositions = [];
-    for (let i = 0; i < 80; i++) {
-        const angle = (i / 80) * Math.PI * 2;
-        const radius = 1.2;
-        const x = Math.cos(angle) * radius;
-        const z = Math.sin(angle) * radius;
-        ringPositions.push(x, 0.2, z);
-    }
-    glowRingGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(ringPositions), 3));
-    const ringPoints = new THREE.Points(glowRingGeo, new THREE.PointsMaterial({ color: 0xff66ff, size: 0.05, blending: THREE.AdditiveBlending }));
-    scene.add(ringPoints);
-    
-    // --- CARROUSEL DE PRODUITS EN SPRITES 3D (cartes streetwear) ---
-    // Liste des produits : pantalons, buggy, Nike TN, Adidas etc.
-    const products = [
-        { name: "NIKE TN 'HyperBlue'", price: "149 €", type: "sneaker", color: "#2b6eff", icon: "👟", brand: "NIKE" },
-        { name: "ADIDAS SUPERSTAR", price: "129 €", type: "sneaker", color: "#000000", icon: "⚡", brand: "ADIDAS" },
-        { name: "MODERN CARGO PANTS", price: "89 €", type: "pants", color: "#4a6741", icon: "👖", brand: "STREET" },
-        { name: "BUGGY DENIM JEANS", price: "79 €", type: "pants", color: "#2c3e66", icon: "👖", brand: "BUGGY" },
-        { name: "YEEZY STYLE RUNNER", price: "199 €", type: "sneaker", color: "#b87333", icon: "👟", brand: "KANYE" },
-        { name: "OVERSIZED HOODIE", price: "109 €", type: "clothing", color: "#aa44ff", icon: "🧥", brand: "STREET³" }
-    ];
-    
-    // Fonction pour créer une texture canvas (carte produit détaillée)
-    function createProductTexture(product) {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 512;
-        canvas.height = 512;
-        
-        // Fond dégradé streetwear
-        const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-        grad.addColorStop(0, '#0a0a1a');
-        grad.addColorStop(1, product.color + 'cc');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // Bordure néon
-        ctx.strokeStyle = '#ff44dd';
-        ctx.lineWidth = 8;
-        ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
-        
-        // Icône grande (emoji ou dessin)
-        ctx.font = `100px "Inter", "Segoe UI", system-ui`;
-        ctx.fillStyle = '#ffffff';
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = '#ff66ff';
-        ctx.fillText(product.icon, canvas.width/2 - 50, 140);
-        ctx.shadowBlur = 0;
-        
-        // Marque
-        ctx.font = `bold 36px "Inter"`;
-        ctx.fillStyle = '#ccccff';
-        ctx.fillText(product.brand, canvas.width/2 - 70, 240);
-        
-        // Nom produit
-        ctx.font = `bold 42px "Inter"`;
-        ctx.fillStyle = '#ffffff';
-        ctx.textAlign = 'center';
-        ctx.fillText(product.name, canvas.width/2, 340);
-        
-        // Prix
-        ctx.font = `800 56px "Inter"`;
-        ctx.fillStyle = '#ffdd88';
-        ctx.fillText(product.price, canvas.width/2, 430);
-        
-        // Petit badge "New"
-        ctx.font = `bold 28px "Inter"`;
-        ctx.fillStyle = '#aa44ff';
-        ctx.fillText("SHOP NOW →", canvas.width/2, 500);
-        
-        // Détails supplémentaires
-        ctx.font = `20px "Inter"`;
-        ctx.fillStyle = '#aaaaff';
-        ctx.fillText("✦ 3D SHOWROOM ✦", canvas.width/2, 565);
-        
-        return new THREE.CanvasTexture(canvas);
-    }
-    
-    // Groupe qui contiendra les sprites en cercle
-    const carouselGroup = new THREE.Group();
-    scene.add(carouselGroup);
-    
-    const radius = 4.2;
-    const yOffset = 1.2;
-    const sprites = [];
-    
-    products.forEach((product, idx) => {
-        const texture = createProductTexture(product);
-        const material = new THREE.SpriteMaterial({ map: texture, depthTest: true, depthWrite: true, transparent: true });
-        const sprite = new THREE.Sprite(material);
-        
-        // Position sur un cercle
-        const angle = (idx / products.length) * Math.PI * 2;
-        const x = Math.cos(angle) * radius;
-        const z = Math.sin(angle) * radius;
-        sprite.position.set(x, yOffset + Math.sin(angle * 2) * 0.2, z);
-        
-        // Ajuster la taille des sprites (effet carte)
-        sprite.scale.set(2.4, 2.4, 1);
-        sprite.userData = { product: product, angle: angle, radius: radius };
-        
-        carouselGroup.add(sprite);
-        sprites.push(sprite);
+    ctx.globalAlpha=0.15+Math.sin(t*0.02)*0.05;
+    ctx.beginPath(); ctx.arc(W/2,H/2,40+Math.sin(t*0.03)*5,0,Math.PI*2);
+    ctx.strokeStyle=c[1]; ctx.lineWidth=1; ctx.stroke();
+    ctx.globalAlpha=0.6+Math.sin(t*0.04)*0.1;
+    ctx.font=`${Math.min(W,H)*0.35}px serif`; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(icon,W/2,H/2+Math.sin(t*0.03)*4);
+    ctx.globalAlpha=1; t++; requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+(function(){
+  const c=document.getElementById('videoCanvas'); if(!c)return;
+  const ctx=c.getContext('2d'); let W,H,t=0;
+  function resize(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;} resize();
+  let bars=[];
+  for(let i=0;i<20;i++) bars.push({x:Math.random()*W,y:Math.random()*H,w:Math.random()*60+20,h:Math.random()*200+100,op:Math.random()*0.06+0.02,vy:(Math.random()-.5)*0.3});
+  function draw(){
+    W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;
+    const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,'#0a0800'); g.addColorStop(0.5,'#1a1200'); g.addColorStop(1,'#0a0a0a');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    bars.forEach(b=>{
+      b.y+=b.vy; if(b.y+b.h<0)b.y=H; if(b.y>H)b.y=-b.h;
+      ctx.fillStyle='#C8A45A'; ctx.globalAlpha=b.op; ctx.fillRect(b.x,b.y,b.w,b.h);
     });
-    
-    // Ajout de petits panneaux lumineux autour (anneau de particules)
-    const ringLights = [];
-    for (let i = 0; i < 36; i++) {
-        const ang = (i / 36) * Math.PI * 2;
-        const xRing = Math.cos(ang) * (radius + 0.2);
-        const zRing = Math.sin(ang) * (radius + 0.2);
-        const pointLightHelper = new THREE.Mesh(
-            new THREE.SphereGeometry(0.08, 8, 8),
-            new THREE.MeshStandardMaterial({ color: 0xff44aa, emissive: 0xaa2266 })
-        );
-        pointLightHelper.position.set(xRing, yOffset - 0.2, zRing);
-        carouselGroup.add(pointLightHelper);
-        ringLights.push(pointLightHelper);
-    }
-    
-    // Animation du carrousel : rotation lente
-    let carouselRotationSpeed = 0.002;
-    let time = 0;
-    
-    // --- ÉLÉMENTS CSS2D pour texte informatif volant (marques) ---
-    const labelDiv = document.createElement('div');
-    labelDiv.textContent = '⚡ NIKE TN | ADIDAS ⚡';
-    labelDiv.style.color = '#fff';
-    labelDiv.style.fontSize = '18px';
-    labelDiv.style.fontWeight = 'bold';
-    labelDiv.style.textShadow = '0 0 10px #ff44aa';
-    labelDiv.style.background = 'rgba(0,0,0,0.6)';
-    labelDiv.style.padding = '4px 12px';
-    labelDiv.style.borderRadius = '30px';
-    labelDiv.style.borderLeft = '3px solid #ff44aa';
-    labelDiv.style.backdropFilter = 'blur(5px)';
-    labelDiv.style.fontFamily = "'Inter', sans-serif";
-    const css2DRenderer = new CSS2DRenderer();
-    css2DRenderer.setSize(window.innerWidth, window.innerHeight);
-    css2DRenderer.domElement.style.position = 'absolute';
-    css2DRenderer.domElement.style.top = '0px';
-    css2DRenderer.domElement.style.left = '0px';
-    css2DRenderer.domElement.style.pointerEvents = 'none';
-    document.body.appendChild(css2DRenderer.domElement);
-    
-    const labelObj = new CSS2DObject(labelDiv);
-    labelObj.position.set(0, 2.2, 0);
-    scene.add(labelObj);
-    
-    // Un petit panneau flottant "PANTALON MODERNE" en CSS2D
-    const pantsLabelDiv = document.createElement('div');
-    pantsLabelDiv.textContent = '🔥 PANTS COLLECTION 🔥';
-    pantsLabelDiv.style.cssText = 'background:#000000aa; color:#ffaa44; padding:6px 14px; border-radius:40px; font-weight:bold; font-size:14px; backdrop-filter:blur(4px); border:1px solid #ffaa44;';
-    const pantsLabel = new CSS2DObject(pantsLabelDiv);
-    pantsLabel.position.set(2.5, 1.2, 2.8);
-    scene.add(pantsLabel);
-    
-    const nikeLabelDiv = document.createElement('div');
-    nikeLabelDiv.textContent = 'NIKE TN / AIR MAX';
-    nikeLabelDiv.style.cssText = 'background:#ff3366aa; color:white; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:bold; backdrop-filter:blur(4px);';
-    const nikeLabel = new CSS2DObject(nikeLabelDiv);
-    nikeLabel.position.set(-2, 1.5, -3);
-    scene.add(nikeLabel);
-    
-    // --- ANIMATION DE LA SNEAKER (flottement & rotation) ---
-    let shoeFloat = 0;
-    
-    // --- INTERACTION BOUTON ---
-    document.getElementById('exploreBtn').addEventListener('click', () => {
-        alert("✨ STREET³ 3D SHOWROOM ✨\nDécouvrez nos Nike TN, Adidas, pantalons modernes et plus.\nCollection disponible très bientôt !");
-        // Petit effet visuel : flash lumineux
-        const flashMat = new THREE.MeshBasicMaterial({ color: 0xaa44ff, transparent: true, opacity: 0.7 });
-        const flashPlane = new THREE.Mesh(new THREE.PlaneGeometry(8, 8), flashMat);
-        flashPlane.position.set(0, 1, 1);
-        scene.add(flashPlane);
-        setTimeout(() => scene.remove(flashPlane), 200);
-    });
-    
-    // --- ANIMATION GLOBALE & LOOP ---
-    let clock = new THREE.Clock();
-    
-    function animate() {
-        const delta = clock.getDelta();
-        const elapsedTime = performance.now() * 0.001;
-        
-        // Rotation du carrousel de produits (groupe entier)
-        carouselGroup.rotation.y += 0.003;
-        
-        // Animation individuelle des sprites : léger effet de flottement
-        sprites.forEach((sprite, i) => {
-            const origY = yOffset + Math.sin((i / sprites.length) * Math.PI * 2 * 2) * 0.2;
-            sprite.position.y = origY + Math.sin(elapsedTime * 1.5 + i) * 0.08;
-            // scaling pulsation discrète
-            const scaleBase = 2.4;
-            const pulse = 1 + Math.sin(elapsedTime * 2.5 + i) * 0.02;
-            sprite.scale.set(scaleBase * pulse, scaleBase * pulse, 1);
-        });
-        
-        // Animation sneaker centrale : flotter et tourner légèrement
-        shoeFloat = Math.sin(elapsedTime * 1.8) * 0.07;
-        shoeGroup.position.y = 0.4 + shoeFloat;
-        shoeGroup.rotation.z = Math.sin(elapsedTime * 1.2) * 0.1;
-        shoeGroup.rotation.x = Math.sin(elapsedTime * 0.9) * 0.05;
-        
-        // Anneau de particules autour de la sneaker
-        ringPoints.rotation.y += 0.01;
-        ringPoints.rotation.x = Math.sin(elapsedTime * 0.5) * 0.2;
-        
-        // Animation des petites lumières du carrousel
-        ringLights.forEach((light, idx) => {
-            const intensity = 0.5 + Math.sin(elapsedTime * 3 + idx) * 0.3;
-            if (light.material) light.material.emissiveIntensity = intensity * 0.8;
-        });
-        
-        // Mouvement des particules
-        particles.rotation.y += 0.0005;
-        particles.rotation.x += 0.0003;
-        
-        // Lumière néon dynamique
-        neonPurple.intensity = 0.7 + Math.sin(elapsedTime * 2) * 0.2;
-        
-        // CSS2D labels toujours face caméra (automatique)
-        labelObj.position.x = Math.sin(elapsedTime * 0.7) * 0.8;
-        labelObj.position.z = Math.cos(elapsedTime * 0.5) * 0.6;
-        
-        pantsLabel.position.x = 2.5 + Math.sin(elapsedTime * 0.9) * 0.2;
-        nikeLabel.position.x = -2 + Math.sin(elapsedTime * 1.1) * 0.3;
-        
-        // Contrôles et rendu
-        controls.update(); // met à jour orbit si déplacement utilisateur
-        
-        renderer.render(scene, camera);
-        css2DRenderer.render(scene, camera);
-        
-        requestAnimationFrame(animate);
-    }
-    
-    animate();
-    
-    // Gestion redimensionnement fenêtre
-    window.addEventListener('resize', onWindowResize, false);
-    function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        css2DRenderer.setSize(window.innerWidth, window.innerHeight);
-    }
-    
-    // Petit confetti d'arrivée (effet stylé)
-    console.log('3D Streetwear Shop — Nike TN, Adidas, pants & sneakers');
+    ctx.globalAlpha=0.5+Math.sin(t*0.02)*0.08;
+    ctx.font=`${Math.min(W,H)*0.5}px serif`; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('✂️',W/2,H/2+Math.sin(t*0.025)*8);
+    ctx.globalAlpha=0.1+Math.sin(t*0.015)*0.04;
+    ctx.beginPath(); ctx.arc(W/2,H/2,Math.min(W,H)*0.35+Math.sin(t*0.02)*10,0,Math.PI*2);
+    ctx.strokeStyle='#C8A45A'; ctx.lineWidth=1; ctx.stroke(); ctx.globalAlpha=1;
+    t++; requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+document.querySelectorAll('.mini-canvas').forEach(c=>{ createSceneCanvas(c,c.dataset.scene); });
+
+function handleBooking(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.form-submit');
+  btn.textContent = '✅ Réservation envoyée ! WhatsApp sous 5 minutes...';
+  btn.style.background = 'linear-gradient(135deg, #2ECC71, #27AE60)';
+  setTimeout(()=>{ btn.textContent='✦ Confirmer Ma Réservation ✦'; btn.style.background=''; e.target.reset(); }, 4000);
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault(); const el=document.querySelector(a.getAttribute('href'));
+    if(el) el.scrollIntoView({behavior:'smooth'});
+  });
+});
 </script>
 </body>
-</html>
+      </html>
